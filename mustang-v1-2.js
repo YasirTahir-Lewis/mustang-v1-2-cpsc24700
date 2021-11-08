@@ -2,6 +2,7 @@ var pageCounter = 1;
 var studentNumber = 1;
 var studentContainer = document.getElementById("student-info");
 var btn = document.getElementById("btn");
+var percentComplete = 1;
 
 
 btn.addEventListener("click", function() {
@@ -47,6 +48,25 @@ btn.addEventListener("click", function() {
     if (pageCounter > 9) {
         btn.classList.add("hide-me");
     };
+
+    ourRequest.upload.addEventListener("progress", function(evt) {
+        console.log("in Upload progress");
+        console.log("Upload Done");
+    }, false);
+    //Download progress, waiting for response from server
+    ourRequest.addEventListener("progress", function(e) {
+        console.log("in Download progress");
+        if (e.lengthComputable) {
+            //percentComplete = (e.loaded / e.total) * 100;
+            percentComplete = parseInt((e.loaded / e.total * 100), 10);
+            console.log(percentComplete);
+            $('#bulk-action-progbar').data("aria-valuenow", percentComplete);
+            $('#bulk-action-progbar').css("width", percentComplete + '%');
+
+        } else {
+            console.log("Length not computable.");
+        }
+    }, false);
 });
 
 function renderHTML(data) {
